@@ -1,0 +1,151 @@
+
+
+<section class="bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Lista de Superhéroes</h2>
+
+    <!-- Mostrar mensajes de error -->
+    <% if (typeof errorMessages !== 'undefined' && errorMessages.length > 0) { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <ul>
+                <% errorMessages.forEach(error => { %>
+                    <li><%= error.msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <!-- Botón para abrir modal de agregar -->
+    <button id="openAddModal" class="bg-blue-500 text-white px-4 py-2 rounded mb-4">
+        Agregar Superhéroe
+    </button>
+
+    <!-- Tabla de superhéroes -->
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 px-4 py-2">Nombre Superhéroe</th>
+                <th class="border border-gray-300 px-4 py-2">Nombre Real</th>
+                <th class="border border-gray-300 px-4 py-2">Edad</th>
+                <th class="border border-gray-300 px-4 py-2">Planeta de Origen</th>
+                <th class="border border-gray-300 px-4 py-2">Debilidad</th>
+                <th class="border border-gray-300 px-4 py-2">Poderes</th>
+                <th class="border border-gray-300 px-4 py-2">Aliados</th>
+                <th class="border border-gray-300 px-4 py-2">Enemigos</th>
+                <th class="border border-gray-300 px-4 py-2">Creador</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha de Creación</th>
+                <th class="border border-gray-300 px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (superheroes && superheroes.length > 0) { %>
+                <% superheroes.forEach(superheroe => { %>
+                    <tr class="hover:bg-gray-100">
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.nombreSuperHeroe %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.nombreReal %></td>
+                        <td class="border border-gray-300 px-4 py-2 text-center"><%= superheroe.edad %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.planetaOrigen %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.debilidad || 'N/A' %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.poderes.join(', ') %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.aliados.join(', ') %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.enemigos.join(', ') %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= superheroe.creador %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= new Date(superheroe.createdAt).toLocaleDateString() %></td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">
+                            <!-- Botón de Editar -->
+                            <button class="bg-yellow-500 text-white px-3 py-1 rounded openEditModal" 
+                                data-id="<%= superheroe._id %>" 
+                                data-nombreSuperHeroe="<%= superheroe.nombreSuperHeroe %>" 
+                                data-nombreReal="<%= superheroe.nombreReal %>" 
+                                data-edad="<%= superheroe.edad %>" 
+                                data-planetaOrigen="<%= superheroe.planetaOrigen %>" 
+                                data-debilidad="<%= superheroe.debilidad %>" 
+                                data-poderes="<%= superheroe.poderes.join(', ') %>" 
+                                data-aliados="<%= superheroe.aliados.join(', ') %>" 
+                                data-enemigos="<%= superheroe.enemigos.join(', ') %>">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <!-- Botón de Eliminar -->
+                            <form action="/api/heroes/<%= superheroe._id %>" method="POST" class="inline-block">
+                                <input type="hidden" name="_method" value="DELETE" id="methodField"> <!-- Campo oculto para el método -->
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="12" class="border border-gray-300 px-4 py-2 text-center">No hay superhéroes registrados.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+    
+    <!-- Incluir modal para agregar/editar superhéroes -->
+    <%- include('partials/modalSuperhero') %>
+</section>
+
+
+<script>
+    const modal = document.getElementById("superheroModal");
+    const openAddModal = document.getElementById("openAddModal");
+    const closeModal = document.getElementById("closeModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const superheroForm = document.getElementById("superheroForm");
+    const methodField = document.getElementById("methodField");
+
+    // Abrir modal de agregar
+    openAddModal.addEventListener("click", () => {
+        modalTitle.textContent = "Agregar Superhéroe";
+        superheroForm.action = "/api/heroes/agregar"; // Cambiar acción a agregar
+        methodField.value = "POST"; // Método POST para agregar
+        superheroForm.reset(); // Limpiar el formulario
+        modal.classList.remove("hidden");
+    });
+
+    // Capturar botones de editar
+    document.querySelectorAll(".openEditModal").forEach(button => {
+        button.addEventListener("click", () => {
+            const id = button.getAttribute("data-id");
+            const nombreSuperHeroe = button.getAttribute("data-nombreSuperHeroe");
+            const nombreReal = button.getAttribute("data-nombreReal");
+            const edad = button.getAttribute("data-edad");
+            const planetaOrigen = button.getAttribute("data-planetaOrigen");
+            const debilidad = button.getAttribute("data-debilidad");
+            const poderes = button.getAttribute("data-poderes");
+            const aliados = button.getAttribute("data-aliados");
+            const enemigos = button.getAttribute("data-enemigos");
+
+            // Cambiar título y acción del formulario
+            modalTitle.textContent = "Editar Superhéroe";
+            superheroForm.action = `/api/heroes/${id}/editar`; // Cambiar acción a editar
+            methodField.value = "PUT"; // Método PUT para editar
+
+            console.log("Hello soy un console log",methodField.value); // Verificar la acción del formulario en la consola
+
+            // Llenar el formulario con los datos del superhéroe
+            document.getElementById("nombreSuperHeroe").value = nombreSuperHeroe;
+            document.getElementById("nombreReal").value = nombreReal;
+            document.getElementById("edad").value = edad;
+            document.getElementById("planetaOrigen").value = planetaOrigen;
+            document.getElementById("debilidad").value = debilidad;
+            document.getElementById("poderes").value = poderes;
+            document.getElementById("aliados").value = aliados;
+            document.getElementById("enemigos").value = enemigos;
+            document.getElementById("methodField").value = "PUT"; // Método PUT para editar
+
+            modal.classList.remove("hidden");
+        });
+    });
+
+    // Cerrar modal si se hace clic fuera de él
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.add("hidden");
+    });
+
+    // Botón para cerrar el modal
+    closeModal.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
+</script>
