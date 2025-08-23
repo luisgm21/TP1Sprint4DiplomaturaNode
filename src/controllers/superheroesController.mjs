@@ -1,8 +1,6 @@
-import exp from "node:constants";
 import { obtenerSuperHeroePorId,buscarSuperHeroesPorAtributo,obtenerSuperHeroesMayoresDe30,obtenerTodosLosSuperHeroes, agregarSuperHeroe, editarSuperHeroe, eliminarSuperHeroePorId,eliminarSuperHeroePorNombreSuperHeroe} from "../services/superheroesService.mjs";
 import { renderizarSuperHeroe,renderizarSuperHeroeEditado,renderizarSuperHeroes } from "../views/responseView.mjs";
 import links from "../config/navbarLinks.mjs"
-import { title } from "node:process";
 
 export async function obtenerSuperHeroePorIdController(req ,res) {
 
