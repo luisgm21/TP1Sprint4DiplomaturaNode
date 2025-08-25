@@ -1,5 +1,3 @@
-import { title } from "node:process";
-
 const links = [
   { title: 'Inicio', url: '/', icon: '/icons/home.svg' },
   { title: 'Superhéroes', url: '/api/heroes', icon: '/icons/guante.svg' },
