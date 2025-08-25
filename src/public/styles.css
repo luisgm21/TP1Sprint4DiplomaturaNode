@@ -1,48 +1,113 @@
+/* CSS for the navigation bar */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
 }
-
 .navbar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: #333;
     padding: 10px 20px;
     color: white;
+    flex-wrap: wrap;
 }
-
 .navbar .logo {
-    width: 50px;
+    height: 48px;
+    width: auto;
     margin-right: 20px;
+    object-fit: contain;
 }
-
 .navbar ul {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 16px;
     margin: 0;
     padding: 0;
+    align-items: center;
 }
-
 .navbar ul li a {
     color: white;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    padding: 6px 8px;
 }
-
 .navbar ul li a img {
     width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: inline-block;
 }
 
+/* Small icon variant for other nav cards (index) */
+.nav-card img, .nav-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .navbar {
+        padding: 8px 12px;
+    }
+    .navbar ul {
+        gap: 8px;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 8px;
+    }
+    .navbar ul li a {
+        padding: 6px 6px;
+    }
+}
 footer {
     text-align: center;
     padding: 10px;
     background-color: #333;
     color: white;
     position: fixed;
-    width: 100%;
     bottom: 0;
+    width: 100%;
+}
+
+/* Styles for index.ejs sections */
+.hero {
+    background: linear-gradient(90deg,#0f172a 0%, #1f2937 100%);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+.hero .hero-content h1 {
+    margin: 0 0 10px 0;
+    font-size: 2rem;
+}
+.hero .hero-content p {
+    margin: 0 0 18px 0;
+    opacity: 0.9;
+}
+.hero-buttons { display:flex; gap:12px; justify-content:center; margin-bottom:12px; }
+.btn { padding: 8px 14px; border-radius:6px; text-decoration:none; color:inherit; }
+.btn-primary { background:#2563eb; color:white; }
+.btn-secondary { background:#111827; color:white; border:1px solid rgba(255,255,255,0.08); }
+.btn-large { padding:12px 20px; font-weight:600; display:inline-block; }
+
+.quick-nav { padding: 24px 16px; }
+.nav-cards { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.nav-card { background:#fff; border-radius:8px; padding:12px; width:180px; box-shadow:0 2px 6px rgba(0,0,0,0.08); text-align:center; }
+.nav-card h3 { margin:8px 0; font-size:1rem; }
+.card-link { display:inline-block; margin-top:8px; color:#2563eb; text-decoration:none; }
+
+.features { padding: 20px 16px; background:#f9fafb; }
+.feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+.feature-item { background:white; padding:12px; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+
+.cta { padding: 20px 16px; text-align:center; }
+
+@media (max-width: 600px) {
+    .nav-card { width: calc(50% - 12px); }
+    .hero .hero-content h1 { font-size: 1.4rem; }
 }
